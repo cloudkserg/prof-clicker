@@ -1,0 +1,10 @@
+.prof-area {
+    width: 80px;
+    height: 250px;
+    border-bottom: solid 2px darkslategray;
+    border-right: solid 2px darkslategray;
+    padding: 20px 40px;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
