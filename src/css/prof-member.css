@@ -1,7 +1,17 @@
-.prof-member {
+.prof-member  {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     background-color: orangered;
     margin-top: 10px;
+    transition: 0.2s linear;
 }
+
+.prof-member:hover  {
+    background-color: darkred;
+}
+.prof-member.clicked  {
+    background-color: yellow;
+}
+
+
