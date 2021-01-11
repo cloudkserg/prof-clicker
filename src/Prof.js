@@ -23,7 +23,7 @@ export default function Prof(props) {
                     <p className="prof-item-count">{props.increasedProfItemCount}</p>
                 </div>
                 <div className="prof-item">
-                     Ушли  <div className="prof-man" />
+                    Ушли  <div className="prof-man" />
                     <p className="prof-item-count">{props.decreasedProfItemCount}</p>
                 </div>
             </div>

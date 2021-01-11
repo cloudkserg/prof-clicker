@@ -1,0 +1,21 @@
+.popup__choice-btn {
+    width: 100%;
+    padding: 20px;
+    background-color: white;
+    border: solid 1px cornflowerblue;
+    text-align: left;
+    box-shadow: 0 0 2px blue ;
+    margin-top: 10px;
+}
+
+.popup__choice-btn:hover {
+    transform: scale(1.02);
+    transition: transform ease-out 0.1s;
+}
+
+.popup__choice-btn:focus {
+    color: white;
+    background-color: cornflowerblue;
+    border: solid 1px cornflowerblue;
+    outline: none;
+}

@@ -12,3 +12,9 @@
 @import url(./css/prof-item-count.css);
 @import url(./css/prof-man.css);
 @import url(./css/win.css);
+@import url(./css/popup/popup.css);
+@import url(./css/popup/popup_opened.css);
+@import url(./css/popup/popup__container.css);
+@import url(./css/popup/popup__header.css);
+@import url(./css/popup/popup__choice-list.css);
+@import url(./css/popup/popup__choice-btn.css);
