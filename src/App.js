@@ -7,6 +7,7 @@ import WorkerStorage from "./Worker/WorkerStorage";
 import MemberStorage from "./Prof/MemberStorage";
 import Event from './Event';
 import eventManager from './Events/EventManager';
+import EventChoiceResolver from './Events/EventChoiceResolver';
 
 //start WorkerStorage
 const workerStorage = new WorkerStorage();
@@ -36,7 +37,8 @@ function App() {
     }
 
 
-    //if we win?
+    const eventChoiseResolver = new EventChoiceResolver(decreaseMember, increaseMember);
+
     useEffect(() => {
         if (memberStorage.getCount() > config.winProfItemCount) {
             workerStorage.stop();
@@ -45,8 +47,9 @@ function App() {
         }
     }, []);
 
-    const handleEventChoiceSelect = (e) => {
+    const handleEventChoiceSelect = (choice) => {
         setEvent(null);
+        eventChoiseResolver.resolve(choice);
     }
 
     const handleEventPopup = () => {
