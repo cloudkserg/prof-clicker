@@ -8,6 +8,7 @@ import WorkerStorage from "./Worker/WorkerStorage";
 import MemberStorage from "./Prof/MemberStorage";
 import Event from './Event';
 import eventManager from './Events/EventManager';
+import EventChoiceResolver from './Events/EventChoiceResolver';
 
 
 function App() {
@@ -40,6 +41,8 @@ function App() {
         }
     }
 
+    const eventChoiseResolver = new EventChoiceResolver(decreaseMember, increaseMember);
+
     const increaseProfItemCount = (value) => setProfItemCount(profItemCount + value);
     useEffect(() => {
         if (isStop) {
@@ -58,8 +61,9 @@ function App() {
         }
     }, [profItemCount, decreasedProfItemCount]);
 
-    const handleEventChoiceSelect = (e) => {
+    const handleEventChoiceSelect = (choice) => {
         setEvent(null);
+        eventChoiseResolver.resolve(choice);
     }
 
     const handleEventPopup = () => {
