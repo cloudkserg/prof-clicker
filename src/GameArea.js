@@ -1,47 +1,29 @@
-import Man from './Man';
 import ProfMember from "./ProfMember";
 import { useEffect, useState } from "react";
-import deleteNeededMans from "./utils/deleteNeededMans";
-import changeMans from "./utils/changeMans";
-import createNewMans from "./utils/createNewMans";
 import config from "./config/config";
-import tryVerbAllMans from "./utils/tryVerbAllMans";
 import Event from './Event';
+import Plant from "./Path/Plant";
+import House from "./Path/House";
+import WorkerStorage from "./Worker/WorkerStorage";
 
-const updateMans = (mans) => {
-    if (mans) {
-        let newMans = deleteNeededMans(mans);
-        newMans = changeMans(newMans);
-        newMans = createNewMans(newMans);
-        return newMans;
-    }
-    return mans;
-};
-
-const runTryVerb = (mans, setMans, increaseProfMans) => {
-    const { newMans, onlyChangedMans } = tryVerbAllMans(mans);
-    setMans(newMans);
-    increaseProfMans(onlyChangedMans.length);
-}
-
+inActive = true
 export default function GameArea(props) {
-    const [mans, setMans] = useState([]);
-    const [tryVerb, setTryVerb] = useState(false);
+    const [workers, setWorkers] = useState([]);
+
+    const workerStorage = new WorkerStorage(props.inActive);
+
+
+
     const [event, setEvent] = useState(null);
 
 
 
     useEffect(() => {
-        const interval = setInterval(() => setMans(updateMans(mans)), config.workerAnimateTimeout);
+        const interval = setInterval(() => setWorkers(updateWorkers(workers)), config.workerAnimateTimeout);
         return () => clearInterval(interval);
-    }, [mans]);
+    }, [workers]);
 
-    useEffect(() => {
-        if (tryVerb) {
-            runTryVerb(mans, setMans, props.increaseProfMans);
-            setTimeout(() => setTryVerb(false), config.workerAnimateTryVerbTimeout);
-        }
-    }, [tryVerb]);
+
 
     const handleEventChouiceSelect = (e) => {
         setEvent(null);
@@ -54,13 +36,11 @@ export default function GameArea(props) {
     return (
         <div className="factory-area">
             <div className="factory-container">
-                <div className="factory"></div>
-                <div className="road">
-                    {mans.map(man => <Man key={man.id} man={man} tryVerb={tryVerb} ></Man>)}
-                </div>
-                <div className="bus"></div>
+                <Plant workers={state.plantWorkers}/>
+                <Road workers={state.roadWorkers} />
+                <House workers={state.houseWorkers} />
             </div>
-            <ProfMember onVerb={() => setTryVerb(true)} onEventPopup={handleEventPopup} />
+            <ProfMember workerStorage={workerStorage} onEventPopup={handleEventPopup} />
             {event && <Event event={event} onChoiceSelect={handleEventChouiceSelect} />}
         </div>
     );

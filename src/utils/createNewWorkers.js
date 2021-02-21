@@ -2,19 +2,19 @@ import {ManModel} from "../models/ManModel";
 import config from "../config/config";
 import {Randomizer} from "./Randomizer/Randomizer";
 
-const generateId = (mans) => {
+const generateId = (workers) => {
     const randomId = Math.floor(Math.random() * (1000 - 1) + 1);
-    const isExistsMan = mans.filter(man => man.id === randomId).length > 0;
-    if (isExistsMan) return generateId(mans)
+    const isExistsMan = workers.filter(man => man.id === randomId).length > 0;
+    if (isExistsMan) return generateId(workers)
     return randomId;
 };
 
 const randomizer = new Randomizer();
-export default function createNewMan (mans) {
+export default function createNewMan (workers) {
     if (randomizer.randomChance(config.generateNewWorkerChance)) {
-        const randomId = generateId(mans);
+        const randomId = generateId(workers);
         const man = new ManModel({id: randomId, index: config.maxWorkers - 1});
-        mans.push(man);
+        workers.push(man);
     }
-    return mans;
+    return workers;
 };

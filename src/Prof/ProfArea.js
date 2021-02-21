@@ -3,7 +3,7 @@ import getProfRank from "./utils/getProfRank";
 import config from "./config/config";
 
 
-export default function Prof(props) {
+export default function ProfArea(props) {
 
     const profItemCount = props.increasedProfItemCount - props.decreasedProfItemCount;
     return (

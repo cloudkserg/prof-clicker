@@ -1,5 +1,5 @@
 import GameArea from './GameArea';
-import Prof from './Prof';
+import ProfArea from './Prof';
 import React, {useEffect, useState} from 'react';
 import config from "./config/config";
 import getDecreasedItemCountInTime from "./utils/getDecreasedItemCountInTime";
@@ -31,8 +31,14 @@ function App() {
     return (
         <div className="App">
             {!isStop && <span>
-                <Prof increasedProfItemCount={profItemCount} decreasedProfItemCount={decreasedProfItemCount}/>
-                <GameArea setProfItemCount={setProfItemCount} increaseProfMans={increaseProfItemCount}/>
+                <ProfArea increasedProfItemCount={profItemCount} decreasedProfItemCount={decreasedProfItemCount}/>
+                <GameArea
+                    workerStorage={workerStorage}
+                    setProfItemCount={setProfItemCount}
+                    increaseProfWorkers={increaseProfItemCount}
+                />
+                <HistoryArea onPause={onPause} />
+
             </span>}
             {isStop && <WinGame ></WinGame> }
         </div>
