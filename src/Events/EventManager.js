@@ -16,8 +16,11 @@ class EventManager {
         this._increastTryCount();
 
         if (!this._event && this._tryChance()) {
-            this._event = this._generateEvent();
-            newEvent = this._event;
+            newEvent = this._generateEvent();
+            if (newEvent) {
+                this._event = newEvent;
+                this._usedEvents.add(newEvent.id);
+            }
         }
 
         if (this._isMaxTryHit()) {
@@ -72,7 +75,7 @@ class EventManager {
     }
 
     _excludeUsedEvents(events) {
-        return events.filter(e => !this._usedEvents.has(events.id));
+        return events.filter(e => !this._usedEvents.has(e.id));
     }
 
     _getRandonEvent(events) {
