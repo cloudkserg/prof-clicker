@@ -15,7 +15,7 @@ export class WorkerModel {
         this.age = age;
         this.fio = fio;
         this.profession = profession;
-        this.agitProbability = agitProbability;
+        this.agitProbability = Math.random() * (0.5 - 0.0001) + 0.00001;
         this.denyThreshold = denyThreshold;
 
         this._countTries = 0;

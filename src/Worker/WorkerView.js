@@ -3,7 +3,8 @@ import {Motion, spring} from 'react-motion';
 
 export default function WorkerView({worker}) {
     const randomNumber = Math.floor(Math.random() * (config.generateNewWorkerRandomShift - 1) + 1);
-    const xPosition = (worker.index * config.workerStep) +(worker.index < 0 ? 0 : randomNumber);
+    let xPosition = (worker.index * config.workerStep) +(worker.index < 0 ? 0 : randomNumber);
+    xPosition = xPosition > 700 ? 700 : xPosition;
     const workerClass = !worker.isProf ? 'worker road__worker' : 'prof-worker road__worker';
     return (
         <div>

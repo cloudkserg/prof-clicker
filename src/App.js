@@ -1,10 +1,12 @@
 import GameArea from './GameArea';
 import ProfArea from './Prof/ProfArea';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import config from "./config/config";
 import WinGame from "./WinGame";
 import WorkerStorage from "./Worker/WorkerStorage";
 import MemberStorage from "./Prof/MemberStorage";
+import Event from './Event';
+import eventManager from './Events/EventManager';
 
 //start WorkerStorage
 const workerStorage = new WorkerStorage();
@@ -14,6 +16,7 @@ memberStorage.init();
 
 function App() {
     const [isStop, setStop] = useState(false);
+    const [event, setEvent] = useState(null);
 
     const [workers, setWorkersState] = useState([]);
     workerStorage.onUpdateWorkers(setWorkersState);
@@ -40,10 +43,19 @@ function App() {
             memberStorage.stop();
             setStop(true);
         }
-    }, [members]);
+    }, []);
 
-    if (!workerStorage) {
-        return (<div></div>);
+    const handleEventChoiceSelect = (e) => {
+        setEvent(null);
+    }
+
+    const handleEventPopup = () => {
+        const event = eventManager.tryEvent();
+
+        if (event) {
+            setEvent(event);
+        }
+
     }
 
     return (
@@ -54,12 +66,13 @@ function App() {
                     workerStorage={workerStorage}
                     memberStorage={memberStorage}
                     workers={workers}
+                    onEventPopup={handleEventPopup}
                 />
-                {/*<HistoryArea onPause={onPause} onRun={onRun} />*/}
+            </span >}
 
-            </span>}
-            {isStop && <WinGame ></WinGame> }
-        </div>
+            { isStop && <WinGame ></WinGame>}
+            { event && <Event event={event} onChoiceSelect={handleEventChoiceSelect} />}
+        </div >
     );
 }
 
