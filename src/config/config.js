@@ -1,4 +1,4 @@
-export default {
+const config = {
     maxWorkers: 5,
     generateNewWorkerChance: 0.6,
     verbWorkerChance: 0.1,
@@ -10,4 +10,5 @@ export default {
     profMemberInActiveTimeout: 400,
     winProfItemCount: 10
 
-}
+};
+export default config;

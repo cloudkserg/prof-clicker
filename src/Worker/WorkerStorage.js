@@ -8,27 +8,39 @@ const state = {
     onPause: false,
     workerInterval: null,
 }
+let onChangeWorkerCallback = null;
 
+const afterChangeWorkers = () => {
+    if (onChangeWorkerCallback) {
+        onChangeWorkerCallback(state.workers);
+    }
+}
 
-
-const updateRoadWorkers = () => {
+const updateWorkers = () => {
+    console.log('UP');
     if (state.onPause) {
         return;
     }
 
     const roadWorkers = state.workers;
 
-    let newRoadWorkers = deleteNeededWorkers(roadWorkers);
-    newRoadWorkers = changeWorkers(newRoadWorkers);
-    newRoadWorkers = createNewWorkers(newRoadWorkers);
-    newRoadWorkers.map(worker => worker.setInRoad());
+    let newWorkers = deleteNeededWorkers(roadWorkers);
+    newWorkers = changeWorkers(newWorkers);
+    newWorkers = createNewWorkers(newWorkers);
+    newWorkers.map(worker => worker.setInRoad());
 
-    state.workers = newRoadWorkers;
+    state.workers = newWorkers;
+    afterChangeWorkers();
 };
 
+
 export default class WorkerStorage {
-    constructor() {
-        state.workerInterval = setInterval(() => updateRoadWorkers(), config.workerAnimateTimeout);
+    constructor(onChangeFunction) {
+        onChangeWorkerCallback = onChangeFunction;
+    }
+
+    init() {
+        state.workerInterval = setInterval(() => updateWorkers(), config.workerAnimateTimeout);
     }
 
     stopStorage() {
@@ -41,6 +53,15 @@ export default class WorkerStorage {
 
     onPause() {
         state.onPause = true;
+    }
+
+    getState() {
+        return state;
+    }
+
+    getWorkers()
+    {
+        return state.workers;
     }
 
      getRoadWorkers() {
@@ -57,9 +78,10 @@ export default class WorkerStorage {
 
     updateWorkers(workers) {
         workers.each(worker => {
-           const findedWorker = state.workers.find(oldWorker => oldWorker.id === worker.id);
+           const findedWorker = workers.find(oldWorker => oldWorker.id === worker.id);
            findedWorker.update(worker);
         });
+        afterChangeWorkers();
     }
 
 

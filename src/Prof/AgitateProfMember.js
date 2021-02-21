@@ -1,6 +1,6 @@
 import { useState } from "react";
 import config from "../config/config";
-import tryVerbAllWorkers from "../utils/tryVerbAllWorkerss";
+import tryVerbAllWorkers from "../utils/tryVerbAllWorkers";
 
 
 const runWorkerAgitate = (workerStorage) => {

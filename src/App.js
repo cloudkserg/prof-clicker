@@ -6,14 +6,22 @@ import getDecreasedItemCountInTime from "./utils/getDecreasedItemCountInTime";
 import WinGame from "./WinGame";
 import WorkerStorage from "./Worker/WorkerStorage";
 
+
 function App() {
     const [profItemCount, setProfItemCount] = useState(0);
     const [decreasedProfItemCount, setDecreasedProfItemCount] = useState(0);
     const [isStop, setStop] = useState(false);
-    const workerStorage = new WorkerStorage();
 
-    const onPause = () => workerStorage.onPause();
-    const onRun = () => workerStorage.onRun();
+    //start
+    const [workers, setWorkerState] = useState([]);
+    const workerStorage = new WorkerStorage(setWorkerState);
+    useEffect(() => {
+        workerStorage.init();
+        return () => workerStorage.stopStorage();
+    }, []);
+
+
+
 
     const increaseProfItemCount = (value) => setProfItemCount(profItemCount + value);
     useEffect(() => {
@@ -31,7 +39,9 @@ function App() {
         if (isWinGame) {
             setStop(true);
         }
-    }, [profItemCount, decreasedProfItemCount])
+    }, [profItemCount, decreasedProfItemCount]);
+
+
 
     return (
         <div className="App">
@@ -39,6 +49,7 @@ function App() {
                 <ProfArea increasedProfItemCount={profItemCount} decreasedProfItemCount={decreasedProfItemCount}/>
                 <GameArea
                     workerStorage={workerStorage}
+                    workers={workers}
                     setProfItemCount={setProfItemCount}
                     increaseProfWorkers={increaseProfItemCount}
                 />
