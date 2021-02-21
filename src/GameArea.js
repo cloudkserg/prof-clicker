@@ -6,7 +6,6 @@ import changeMans from "./utils/changeMans";
 import createNewMans from "./utils/createNewMans";
 import config from "./config/config";
 import tryVerbAllMans from "./utils/tryVerbAllMans";
-import Event from './Event';
 
 const updateMans = (mans) => {
     if (mans) {
@@ -27,7 +26,6 @@ const runTryVerb = (mans, setMans, increaseProfMans) => {
 export default function GameArea(props) {
     const [mans, setMans] = useState([]);
     const [tryVerb, setTryVerb] = useState(false);
-    const [event, setEvent] = useState(null);
 
 
 
@@ -43,13 +41,7 @@ export default function GameArea(props) {
         }
     }, [tryVerb]);
 
-    const handleEventChouiceSelect = (e) => {
-        setEvent(null);
-    }
 
-    const handleEventPopup = (event) => {
-        setEvent(event);
-    }
 
     return (
         <div className="factory-area">
@@ -60,8 +52,7 @@ export default function GameArea(props) {
                 </div>
                 <div className="bus"></div>
             </div>
-            <ProfMember onVerb={() => setTryVerb(true)} onEventPopup={handleEventPopup} />
-            {event && <Event event={event} onChoiceSelect={handleEventChouiceSelect} />}
+            <ProfMember onVerb={() => setTryVerb(true)} onEventPopup={props.onEventPopup} />
         </div>
     );
 }

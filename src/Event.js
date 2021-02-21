@@ -8,7 +8,7 @@ export default function Event(props) {
                 <p className="popup__description">{event.description}</p>
                 <ul className="popup__choice-list">
                     {event.choices.map((choice, index) => (
-                        <li><button type="button" className="popup__choice-btn" key={index} onClick={onChoiceSelect}>{choice.description}</button></li>
+                        <li key={index} ><button type="button" className="popup__choice-btn" onClick={onChoiceSelect}>{choice.description}</button></li>
                     ))}
                 </ul>
             </div>

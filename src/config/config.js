@@ -8,6 +8,7 @@ export default {
     workerAnimateTryVerbTimeout: 300,
     profItemDecreaseInterval: 2000,
     profMemberInActiveTimeout: 400,
-    winProfItemCount: 10
+    winProfItemCount: 10,
+    eventMaxTryCount: 10
 
 }
