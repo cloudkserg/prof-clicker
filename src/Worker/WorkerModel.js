@@ -9,6 +9,7 @@ export class WorkerModel {
 
         this.inHouse = true;
         this.inPlant = false;
+        this.isDirToPlant = true;
 
         this.sex = sex;
         this.age = age;
@@ -20,7 +21,9 @@ export class WorkerModel {
         this._countTries = 0;
         this.id = id;
         this.index = index;
-        this._workerRandomizer = new Randomizer();
+        this._agitateRandomizer = new Randomizer();
+        this._roadRandomizer = new Randomizer();
+
     }
 
     update(data) {
@@ -36,10 +39,16 @@ export class WorkerModel {
         this.inPlant = false;
     }
 
-    setInRoad()
+    setInRoad(fromHouse = true)
     {
         this.inHouse = false;
         this.inPlant = false;
+        this._roadRandomizer = new Randomizer();
+    }
+
+    roadChance(chance)
+    {
+        return this._roadRandomizer.randomChance(chance);
     }
 
     setInProcessAgitate(status)
@@ -62,7 +71,7 @@ export class WorkerModel {
             return false;
         }
 
-        if (checkTryVerb(this._workerRandomizer, this.agitProbability, this._countTries)) {
+        if (checkTryVerb(this._agitateRandomizer, this.agitProbability, this._countTries)) {
             this.isProf = true;
         }
         this._countTries++;

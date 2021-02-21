@@ -1,6 +1,6 @@
 const config = {
     maxWorkers: 5,
-    generateNewWorkerChance: 0.6,
+    toRoadWorkerChance: 0.6,
     generateNewWorkerRandomShift: 70,
     workerStep: 100,
     workerAnimateTimeout: 1000,

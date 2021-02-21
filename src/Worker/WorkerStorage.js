@@ -1,40 +1,29 @@
 import config from "../config/config";
-import deleteNeededWorkers from "../utils/deleteNeededWorkers";
-import changeWorkers from "../utils/changeWorkers";
-import createNewWorkers from "../utils/createNewWorkers";
 import * as _ from "lodash";
+import tryVerbAllWorkers from "../utils/tryVerbAllWorkers";
+import moveHouseWorkersToRoad from "../utils/moveHouseWorkersToRoad";
+import movePlantWorkersToRoad from "../utils/movePlantWorkersToRoad";
+import moveRoadWorkers from "../utils/moveRoadWorkers";
+import {WorkerFactory} from "./WorkerFactory";
+
+
+let onUpdateWorkers = null;
 
 const state = {
     workers: [],
     onPause: false,
     workerInterval: null,
 }
-let onChangeWorkerCallback = null;
 
 const afterChangeWorkers = () => {
-    if (onChangeWorkerCallback) {
-        onChangeWorkerCallback(state.workers);
+    if (onUpdateWorkers) {
+        const newWorkers = state.workers.map(worker => Object.assign(Object.create(Object.getPrototypeOf(worker)), worker));
+        onUpdateWorkers(newWorkers);
     }
 }
 
-const generateWorkers = () => {
-    if (state.onPause) {
-        return;
-    }
-
-    const roadWorkers = state.workers;
-
-    let newWorkers = deleteNeededWorkers(roadWorkers);
-    newWorkers = changeWorkers(newWorkers);
-    newWorkers = createNewWorkers(newWorkers);
-    newWorkers.map(worker => worker.setInRoad());
-
-    state.workers = newWorkers;
-    afterChangeWorkers();
-};
-
 const updateWorkers = (workers) => {
-    workers.map(worker => {
+    workers.forEach(worker => {
         const findedWorker = workers.find(oldWorker => oldWorker.id === worker.id);
         findedWorker.update(worker);
     });
@@ -52,16 +41,21 @@ const stopAgitateWorkers = (workers) => {
 }
 
 
-export default class WorkerStorage {
-    constructor(onChangeFunction) {
-        onChangeWorkerCallback = onChangeFunction;
+export default class WorkerStorage  {
+    constructor() {
+        state.workers = WorkerFactory.createAllWorkers();
     }
 
     init() {
-        state.workerInterval = setInterval(() => generateWorkers(), config.workerAnimateTimeout);
+        state.workerInterval = setInterval(() => this._workerStep(), config.workerAnimateTimeout);
     }
 
-    stopStorage() {
+    onUpdateWorkers(func) {
+        onUpdateWorkers = func;
+    }
+
+
+    stop() {
         clearInterval(state.workerInterval);
     }
 
@@ -82,6 +76,22 @@ export default class WorkerStorage {
         return state.workers;
     }
 
+    _workerStep = () => {
+        if (state.onPause) {
+            return;
+        }
+
+        //change to road
+        const houseWorkers = this.getHouseWorkers();
+        moveHouseWorkersToRoad(houseWorkers);
+
+        const plantWorkers = this.getPlantWorkers();
+        movePlantWorkersToRoad(plantWorkers);
+
+        moveRoadWorkers(this.getRoadWorkers());
+        afterChangeWorkers();
+    };
+
      getRoadWorkers() {
          return state.workers.filter(worker => !worker.inHouse && !worker.inPlant);
      }
@@ -94,24 +104,25 @@ export default class WorkerStorage {
         return state.workers.filter(worker => worker.inHouse);
      }
 
+    getRandomNonMember() {
+        return _.sample(state.workers.filter(worker => !worker.inProf));
+    }
 
-    agitateRoadWorkers(tryAgitateRoadWorkers) {
+    changeWorkerToNonMember(worker) {
+        worker.isProf = false;
+        afterChangeWorkers();
+    }
+
+    agitateRoadWorkers() {
         const roadWorkers = this.getRoadWorkers();
         startAgitateWorkers(roadWorkers);
 
-        const agitateWorkers = tryAgitateRoadWorkers(roadWorkers);
-        updateWorkers(agitateWorkers);
+        const successAgitateWorkers = tryVerbAllWorkers(roadWorkers);
+        updateWorkers(successAgitateWorkers);
 
         stopAgitateWorkers(roadWorkers);
-    }
 
-    pushWorker(worker) {
-        state.workers.push(worker);
+        return successAgitateWorkers;
     }
-
-    popRandomWorker() {
-        return _.shuffle(state.workers).pop();
-    }
-
 
 }

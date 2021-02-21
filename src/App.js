@@ -2,73 +2,58 @@ import GameArea from './GameArea';
 import ProfArea from './Prof/ProfArea';
 import React, {useEffect, useState} from 'react';
 import config from "./config/config";
-import getDecreasedItemCountInTime from "./utils/getDecreasedItemCountInTime";
 import WinGame from "./WinGame";
 import WorkerStorage from "./Worker/WorkerStorage";
 import MemberStorage from "./Prof/MemberStorage";
 
+//start WorkerStorage
+const workerStorage = new WorkerStorage();
+workerStorage.init();
+const memberStorage = new MemberStorage();
+memberStorage.init();
 
 function App() {
-    const [profItemCount, setProfItemCount] = useState(0);
-    const [decreasedProfItemCount, setDecreasedProfItemCount] = useState(0);
     const [isStop, setStop] = useState(false);
 
-    //start WorkerStorage
-    const [workers, setWorkerState] = useState([]);
-    const workerStorage = new WorkerStorage(setWorkerState);
-    useEffect(() => {
-        workerStorage.init();
-        return () => workerStorage.stopStorage();
-    }, []);
-    const memberStorage = new MemberStorage();
+    const [workers, setWorkersState] = useState([]);
+    workerStorage.onUpdateWorkers(setWorkersState);
 
-
+    //startMemberStorage
+    const [members, setMembersState] = useState([]);
+    memberStorage.onUpdateMembers(setMembersState);
+    memberStorage.onDecreaseMember(member => workerStorage.changeWorkerToNonMember(member.worker));
     const increaseMember = () => {
-        const worker = workerStorage.popRandomWorker();
+        const worker = workerStorage.getRandomNonMember();
         if (worker) {
-            memberStorage.pushMember(worker);
+            memberStorage.addMember(worker);
         }
     }
-
     const decreaseMember = () => {
-        const member = memberStorage.popRandomMember();
-        if (member) {
-            workerStorage.pushWorker(member);
-        }
+        memberStorage.popRandomMember();
     }
 
 
-
-
-    const increaseProfItemCount = (value) => setProfItemCount(profItemCount + value);
+    //if we win?
     useEffect(() => {
-        if (isStop) {
-            return;
-        }
-        const interval = setInterval(
-            () => setDecreasedProfItemCount(getDecreasedItemCountInTime(profItemCount, decreasedProfItemCount)),
-            config.profItemDecreaseInterval);
-        return () => clearInterval(interval);
-    }, [profItemCount, decreasedProfItemCount]);
-
-    useEffect(() => {
-        const isWinGame = profItemCount - decreasedProfItemCount > config.winProfItemCount;
-        if (isWinGame) {
+        if (memberStorage.getCount() > config.winProfItemCount) {
+            workerStorage.stop();
+            memberStorage.stop();
             setStop(true);
         }
-    }, [profItemCount, decreasedProfItemCount]);
+    }, [members]);
 
-
+    if (!workerStorage) {
+        return (<div></div>);
+    }
 
     return (
         <div className="App">
             {!isStop && <span>
-                <ProfArea increasedProfItemCount={profItemCount} decreasedProfItemCount={decreasedProfItemCount}/>
+                <ProfArea members={members} increasedProfItemCount={memberStorage.allAgitated} decreasedProfItemCount={memberStorage.allLeft}/>
                 <GameArea
                     workerStorage={workerStorage}
+                    memberStorage={memberStorage}
                     workers={workers}
-                    setProfItemCount={setProfItemCount}
-                    increaseProfWorkers={increaseProfItemCount}
                 />
                 {/*<HistoryArea onPause={onPause} onRun={onRun} />*/}
 

@@ -7,6 +7,8 @@ import AgitateProfMember from "./Prof/AgitateProfMember";
 
 export default function GameArea(props) {
     const workerStorage = props.workerStorage;
+    const memberStorage = props.memberStorage;
+    const workers = props.workers;
     const [event, setEvent] = useState(null);
 
 
@@ -25,7 +27,7 @@ export default function GameArea(props) {
                 <Road workers={workerStorage.getRoadWorkers()} />
                 <House workers={workerStorage.getHouseWorkers()} />
             </div>
-            <AgitateProfMember workerStorage={workerStorage} onEventPopup={handleEventPopup} />
+            <AgitateProfMember workerStorage={workerStorage} memberStorage={memberStorage} onEventPopup={handleEventPopup} />
             {/*{event && <Event event={event} onChoiceSelect={handleEventChouiceSelect} />}*/}
         </div>
     );
