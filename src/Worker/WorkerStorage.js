@@ -3,32 +3,64 @@ import deleteNeededWorkers from "../utils/deleteNeededWorkers";
 import changeWorkers from "../utils/changeWorkers";
 import createNewWorkers from "../utils/createNewWorkers";
 
-const [roadWorkers, setRoadWorkers] = useState([]);
-const [plantWorkers, setPlantWorkers] = useState([]);
-const [houseWorkers, setHouseWorkers] = useState([]);
+const state = {
+    workers: [],
+    onPause: false,
+    workerInterval: null,
+}
 
-const updateRoadWorkers = (state, dispatch) => {
-    roadWorkers = state.roadWorkers;
-    let newWorkers = deleteNeededWorkers(roadWorkers);
-    newWorkers = changeWorkers(newWorkers);
-    newWorkers = createNewWorkers(newWorkers);
-    dispatch({type: })
+
+
+const updateRoadWorkers = () => {
+    if (state.onPause) {
+        return;
+    }
+
+    const roadWorkers = state.workers;
+
+    let newRoadWorkers = deleteNeededWorkers(roadWorkers);
+    newRoadWorkers = changeWorkers(newRoadWorkers);
+    newRoadWorkers = createNewWorkers(newRoadWorkers);
+    newRoadWorkers.map(worker => worker.setInRoad());
+
+    state.workers = newRoadWorkers;
 };
-
-let workerInterval = null;
-let reducer = null;
 
 export default class WorkerStorage {
     constructor() {
-        workerInterval = setInterval(() => updateWorkers(), config.workerAnimateTimeout);
-        useEffect(() => {
-            const interval = setInterval(() => setWorkers(updateWorkers(workers)), config.workerAnimateTimeout);
-            return () => clearInterval(interval);
-        }, [workers]);
+        state.workerInterval = setInterval(() => updateRoadWorkers(), config.workerAnimateTimeout);
     }
 
-    getReducer() {
-        return reducer;
+    stopStorage() {
+        clearInterval(state.workerInterval);
     }
+
+    onRun() {
+        state.onPause = false;
+    }
+
+    onPause() {
+        state.onPause = true;
+    }
+
+     getRoadWorkers() {
+         return state.workers.filter(worker => !worker.inHouse && !worker.inPlant);
+     }
+
+     getPlantWorkers() {
+         return state.workers.filter(worker => worker.inPlant);
+     }
+
+     getHouseWorkers() {
+        return state.workers.filter(worker => worker.inHouse);
+     }
+
+    updateWorkers(workers) {
+        workers.each(worker => {
+           const findedWorker = state.workers.find(oldWorker => oldWorker.id === worker.id);
+           findedWorker.update(worker);
+        });
+    }
+
 
 }

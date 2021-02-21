@@ -1,9 +1,9 @@
-import ProfMember from "./ProfMember";
 import { useState } from "react";
 import Event from './Event';
 import Plant from "./Path/Plant";
 import House from "./Path/House";
 import Road from "./Path/Road";
+import AgitateProfMember from "./Prof/AgitateProfMember";
 
 export default function GameArea(props) {
     const workerStorage = props.workerStorage;
@@ -21,11 +21,11 @@ export default function GameArea(props) {
     return (
         <div className="factory-area">
             <div className="factory-container">
-                <Plant workers={workerStorage.plantWorkers}/>
-                <Road workers={workerStorage.roadWorkers} />
-                <House workers={workerStorage.houseWorkers} />
+                <Plant workers={workerStorage.getPlantWorkers()}/>
+                <Road workers={workerStorage.getRoadWorkers()} />
+                <House workers={workerStorage.getHouseWorkers()} />
             </div>
-            <ProfMember workerStorage={workerStorage} onEventPopup={handleEventPopup} />
+            <AgitateProfMember workerStorage={workerStorage} onEventPopup={handleEventPopup} />
             {event && <Event event={event} onChoiceSelect={handleEventChouiceSelect} />}
         </div>
     );

@@ -1,5 +1,5 @@
 import GameArea from './GameArea';
-import ProfArea from './Prof';
+import ProfArea from './Prof/ProfArea';
 import React, {useEffect, useState} from 'react';
 import config from "./config/config";
 import getDecreasedItemCountInTime from "./utils/getDecreasedItemCountInTime";
@@ -42,7 +42,7 @@ function App() {
                     setProfItemCount={setProfItemCount}
                     increaseProfWorkers={increaseProfItemCount}
                 />
-                <HistoryArea onPause={onPause} onRun={onRun} />
+                {/*<HistoryArea onPause={onPause} onRun={onRun} />*/}
 
             </span>}
             {isStop && <WinGame ></WinGame> }

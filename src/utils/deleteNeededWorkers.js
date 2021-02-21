@@ -1,3 +1,3 @@
 export default function deleteNeededWorkers(workers) {
-    return workers.filter(man => man.index !== 0);
+    return workers.filter(worker => worker.index !== 0);
 }
