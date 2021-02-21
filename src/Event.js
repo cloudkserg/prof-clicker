@@ -28,16 +28,11 @@ export default function Event(props) {
                     </ul>
                 )}
                 {selectedChoice && (
-                    <>
-                        <p>
-                            {selectedChoice.description}
-                        </p>
-                        <p>
-                            {selectedChoice.result.description}
-                        </p>
-
-                        <button type="button" onClick={onChoiceSelect}>OK</button>
-                    </>
+                    <ul className="popup__choice-list">
+                        <li><button type="button" className="popup__choice-btn popup__choice-btn_state_selected">{selectedChoice.description}</button></li>
+                        <li><p>{selectedChoice.result.description}</p></li>
+                        <li > <button type="button" className="popup__choice-btn popup__choice-btn_state_ready" onClick={onChoiceSelect}>OK</button></li>
+                    </ul>
                 )}
             </div>
         </div>
