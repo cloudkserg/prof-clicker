@@ -3,12 +3,19 @@ import {Randomizer} from "../utils/Randomizer/Randomizer";
 
 export class WorkerModel {
 
-    constructor({id, index}) {
+    constructor({id, index, sex, age, fio, profession, agitProbability, denyThreshold}) {
         this.isProf = false;
         this.inProcessAgitate = false;
 
         this.inHouse = true;
         this.inPlant = false;
+
+        this.sex = sex;
+        this.age = age;
+        this.fio = fio;
+        this.profession = profession;
+        this.agitProbability = agitProbability;
+        this.denyThreshold = denyThreshold;
 
         this._countTries = 0;
         this.id = id;
@@ -51,7 +58,11 @@ export class WorkerModel {
             return true;
         }
 
-        if (checkTryVerb(this._workerRandomizer, this._countTries)) {
+        if (this._countTries > this.denyThreshold) {
+            return false;
+        }
+
+        if (checkTryVerb(this._workerRandomizer, this.agitProbability, this._countTries)) {
             this.isProf = true;
         }
         this._countTries++;

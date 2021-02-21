@@ -9,6 +9,8 @@ const generateId = (workers) => {
     return randomId;
 };
 
+// const getNewWorker =
+
 const randomizer = new Randomizer();
 export default function createNewWorker (workers) {
     if (randomizer.randomChance(config.generateNewWorkerChance)) {

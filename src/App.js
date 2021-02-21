@@ -5,6 +5,7 @@ import config from "./config/config";
 import getDecreasedItemCountInTime from "./utils/getDecreasedItemCountInTime";
 import WinGame from "./WinGame";
 import WorkerStorage from "./Worker/WorkerStorage";
+import MemberStorage from "./Prof/MemberStorage";
 
 
 function App() {
@@ -19,6 +20,22 @@ function App() {
         workerStorage.init();
         return () => workerStorage.stopStorage();
     }, []);
+    const memberStorage = new MemberStorage();
+
+
+    const increaseMember = () => {
+        const worker = workerStorage.popRandomWorker();
+        if (worker) {
+            memberStorage.pushMember(worker);
+        }
+    }
+
+    const decreaseMember = () => {
+        const member = memberStorage.popRandomMember();
+        if (member) {
+            workerStorage.pushWorker(member);
+        }
+    }
 
 
 

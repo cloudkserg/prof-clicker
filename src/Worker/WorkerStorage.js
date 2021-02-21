@@ -2,6 +2,7 @@ import config from "../config/config";
 import deleteNeededWorkers from "../utils/deleteNeededWorkers";
 import changeWorkers from "../utils/changeWorkers";
 import createNewWorkers from "../utils/createNewWorkers";
+import * as _ from "lodash";
 
 const state = {
     workers: [],
@@ -102,6 +103,14 @@ export default class WorkerStorage {
         updateWorkers(agitateWorkers);
 
         stopAgitateWorkers(roadWorkers);
+    }
+
+    pushWorker(worker) {
+        state.workers.push(worker);
+    }
+
+    popRandomWorker() {
+        return _.shuffle(state.workers).pop();
     }
 
 
