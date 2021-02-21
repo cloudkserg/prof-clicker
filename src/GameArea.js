@@ -26,7 +26,7 @@ export default function GameArea(props) {
                 <House workers={workerStorage.getHouseWorkers()} />
             </div>
             <AgitateProfMember workerStorage={workerStorage} onEventPopup={handleEventPopup} />
-            {event && <Event event={event} onChoiceSelect={handleEventChouiceSelect} />}
+            {/*{event && <Event event={event} onChoiceSelect={handleEventChouiceSelect} />}*/}
         </div>
     );
 }

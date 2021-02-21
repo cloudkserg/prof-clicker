@@ -12,7 +12,7 @@ function App() {
     const [decreasedProfItemCount, setDecreasedProfItemCount] = useState(0);
     const [isStop, setStop] = useState(false);
 
-    //start
+    //start WorkerStorage
     const [workers, setWorkerState] = useState([]);
     const workerStorage = new WorkerStorage(setWorkerState);
     useEffect(() => {

@@ -16,8 +16,7 @@ const afterChangeWorkers = () => {
     }
 }
 
-const updateWorkers = () => {
-    console.log('UP');
+const generateWorkers = () => {
     if (state.onPause) {
         return;
     }
@@ -33,6 +32,24 @@ const updateWorkers = () => {
     afterChangeWorkers();
 };
 
+const updateWorkers = (workers) => {
+    workers.map(worker => {
+        const findedWorker = workers.find(oldWorker => oldWorker.id === worker.id);
+        findedWorker.update(worker);
+    });
+    afterChangeWorkers();
+}
+
+const startAgitateWorkers = (workers) => {
+    workers.map(worker => worker.setInProcessAgitate(true));
+    afterChangeWorkers();
+}
+
+const stopAgitateWorkers = (workers) => {
+    workers.map(worker => worker.setInProcessAgitate(false));
+    afterChangeWorkers();
+}
+
 
 export default class WorkerStorage {
     constructor(onChangeFunction) {
@@ -40,7 +57,7 @@ export default class WorkerStorage {
     }
 
     init() {
-        state.workerInterval = setInterval(() => updateWorkers(), config.workerAnimateTimeout);
+        state.workerInterval = setInterval(() => generateWorkers(), config.workerAnimateTimeout);
     }
 
     stopStorage() {
@@ -76,12 +93,15 @@ export default class WorkerStorage {
         return state.workers.filter(worker => worker.inHouse);
      }
 
-    updateWorkers(workers) {
-        workers.each(worker => {
-           const findedWorker = workers.find(oldWorker => oldWorker.id === worker.id);
-           findedWorker.update(worker);
-        });
-        afterChangeWorkers();
+
+    agitateRoadWorkers(tryAgitateRoadWorkers) {
+        const roadWorkers = this.getRoadWorkers();
+        startAgitateWorkers(roadWorkers);
+
+        const agitateWorkers = tryAgitateRoadWorkers(roadWorkers);
+        updateWorkers(agitateWorkers);
+
+        stopAgitateWorkers(roadWorkers);
     }
 
 

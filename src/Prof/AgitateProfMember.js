@@ -4,13 +4,7 @@ import tryVerbAllWorkers from "../utils/tryVerbAllWorkers";
 
 
 const runWorkerAgitate = (workerStorage) => {
-    const roadWorkers = workerStorage.getRoadWorkers;
-    roadWorkers.map(worker => worker.setInProcessAgitate(true));
-
-    const agitateWorkers = tryVerbAllWorkers(roadWorkers);
-    workerStorage.updateWorkers(agitateWorkers);
-
-    roadWorkers.map(worker => worker.setInProcessAgitate(false));
+    workerStorage.agitateRoadWorkers(tryVerbAllWorkers);
 }
 
 export default function AgitateProfMember(props) {
