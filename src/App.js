@@ -4,11 +4,16 @@ import React, {useEffect, useState} from 'react';
 import config from "./config/config";
 import getDecreasedItemCountInTime from "./utils/getDecreasedItemCountInTime";
 import WinGame from "./WinGame";
+import WorkerStorage from "./Worker/WorkerStorage";
 
 function App() {
     const [profItemCount, setProfItemCount] = useState(0);
     const [decreasedProfItemCount, setDecreasedProfItemCount] = useState(0);
     const [isStop, setStop] = useState(false);
+    const workerStorage = new WorkerStorage();
+
+    const onPause = () => workerStorage.onPause();
+    const onRun = () => workerStorage.onRun();
 
     const increaseProfItemCount = (value) => setProfItemCount(profItemCount + value);
     useEffect(() => {
@@ -37,7 +42,7 @@ function App() {
                     setProfItemCount={setProfItemCount}
                     increaseProfWorkers={increaseProfItemCount}
                 />
-                <HistoryArea onPause={onPause} />
+                <HistoryArea onPause={onPause} onRun={onRun} />
 
             </span>}
             {isStop && <WinGame ></WinGame> }

@@ -21,7 +21,10 @@ let reducer = null;
 export default class WorkerStorage {
     constructor() {
         workerInterval = setInterval(() => updateWorkers(), config.workerAnimateTimeout);
-
+        useEffect(() => {
+            const interval = setInterval(() => setWorkers(updateWorkers(workers)), config.workerAnimateTimeout);
+            return () => clearInterval(interval);
+        }, [workers]);
     }
 
     getReducer() {
