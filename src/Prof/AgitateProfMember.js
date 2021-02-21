@@ -1,8 +1,16 @@
 import { useState } from "react";
-import config from "./config/config";
+import config from "../config/config";
+import tryVerbAllWorkers from "../utils/tryVerbAllWorkers";
 
-export default function ProfMember(props) {
+
+const runWorkerAgitate = (workerStorage) => {
+    workerStorage.agitateRoadWorkers(tryVerbAllWorkers);
+}
+
+export default function AgitateProfMember(props) {
+    const workerStorage = props.workerStorage;
     const [isClicked, setClicked] = useState(false);
+
 
     const performClick = () => {
         if (isClicked) {
@@ -10,7 +18,7 @@ export default function ProfMember(props) {
         }
         setClicked(true);
         setTimeout(() => setClicked(false), config.profMemberInActiveTimeout);
-        props.onVerb();
+        runWorkerAgitate(workerStorage);
         props.onEventPopup({
             name: 'Разговор с работником',
             description: 'Мы оборонное предприятие! Столп российской безопастиности! Ты что тут лодшку шатаешь? Пятая колонна?',

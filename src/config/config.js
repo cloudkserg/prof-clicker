@@ -1,7 +1,6 @@
-export default {
+const config = {
     maxWorkers: 5,
     generateNewWorkerChance: 0.6,
-    verbWorkerChance: 0.1,
     generateNewWorkerRandomShift: 70,
     workerStep: 100,
     workerAnimateTimeout: 1000,
@@ -10,5 +9,5 @@ export default {
     profMemberInActiveTimeout: 400,
     winProfItemCount: 10,
     eventMaxTryCount: 10
-
 }
+export default config;

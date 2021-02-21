@@ -1,17 +1,17 @@
-import config from "./config/config";
+import config from "../config/config";
 import {Motion, spring} from 'react-motion';
 
-export default function Man({man, tryVerb}) {
+export default function WorkerView({worker}) {
     const randomNumber = Math.floor(Math.random() * (config.generateNewWorkerRandomShift - 1) + 1);
-    const xPosition = (man.index * config.workerStep) +(man.index == 0 ? 0 : randomNumber);
+    const xPosition = (worker.index * config.workerStep) +(worker.index == 0 ? 0 : randomNumber);
 
-    const manClass = !man.isProf ? 'man road__man' : 'prof-man road__man';
+    const workerClass = !worker.isProf ? 'worker road__worker' : 'prof-worker road__worker';
     return (
         <div>
             <Motion style={{x: spring(xPosition)}}>
                 {({x}) =>
-                    <div className={manClass} style={{
-                        borderBottom: (tryVerb && !man.isProf) ? `20px solid red` : ``,
+                    <div className={workerClass} style={{
+                        borderBottom: (worker.inProcessAgitate) ? `20px solid red` : ``,
                         WebkitTransform: `translate3d(${x}px, 0, 0)`,
                         transform: `translate3d(${x}px, 0, 0)`,
                     }}></div>}

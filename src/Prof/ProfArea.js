@@ -1,9 +1,9 @@
 import ProfMember from "./ProfMember";
-import getProfRank from "./utils/getProfRank";
-import config from "./config/config";
+import getProfRank from "../utils/getProfRank";
+import config from "../config/config";
 
 
-export default function Prof(props) {
+export default function ProfArea(props) {
 
     const profItemCount = props.increasedProfItemCount - props.decreasedProfItemCount;
     return (
@@ -15,15 +15,15 @@ export default function Prof(props) {
                     <p className="prof-item-count">{getProfRank(profItemCount)}</p>
                 </div>
                 <div className="prof-item">
-                    Сегодня <div className="prof-man" />
+                    Сегодня <div className="prof-worker" />
                     <p className="prof-item-count">{profItemCount}</p>
                 </div>
                 <div className="prof-item">
-                    Найдено  <div className="prof-man" />
+                    Найдено  <div className="prof-worker" />
                     <p className="prof-item-count">{props.increasedProfItemCount}</p>
                 </div>
                 <div className="prof-item">
-                    Ушли  <div className="prof-man" />
+                    Ушли  <div className="prof-worker" />
                     <p className="prof-item-count">{props.decreasedProfItemCount}</p>
                 </div>
             </div>

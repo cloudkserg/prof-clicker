@@ -1,12 +1,13 @@
 import GameArea from './GameArea';
-import Prof from './Prof';
+import ProfArea from './Prof/ProfArea';
 import React, { useEffect, useState } from 'react';
 import config from "./config/config";
 import getDecreasedItemCountInTime from "./utils/getDecreasedItemCountInTime";
 import WinGame from "./WinGame";
+import WorkerStorage from "./Worker/WorkerStorage";
+import MemberStorage from "./Prof/MemberStorage";
 import Event from './Event';
 import eventManager from './Events/EventManager';
-
 
 
 function App() {
@@ -14,6 +15,30 @@ function App() {
     const [decreasedProfItemCount, setDecreasedProfItemCount] = useState(0);
     const [isStop, setStop] = useState(false);
     const [event, setEvent] = useState(null);
+
+    //start WorkerStorage
+    const [workers, setWorkerState] = useState([]);
+    const workerStorage = new WorkerStorage(setWorkerState);
+    useEffect(() => {
+        workerStorage.init();
+        return () => workerStorage.stopStorage();
+    }, []);
+    const memberStorage = new MemberStorage();
+
+
+    const increaseMember = () => {
+        const worker = workerStorage.popRandomWorker();
+        if (worker) {
+            memberStorage.pushMember(worker);
+        }
+    }
+
+    const decreaseMember = () => {
+        const member = memberStorage.popRandomMember();
+        if (member) {
+            workerStorage.pushWorker(member);
+        }
+    }
 
     const increaseProfItemCount = (value) => setProfItemCount(profItemCount + value);
     useEffect(() => {
@@ -31,7 +56,7 @@ function App() {
         if (isWinGame) {
             setStop(true);
         }
-    }, [profItemCount, decreasedProfItemCount])
+    }, [profItemCount, decreasedProfItemCount]);
 
     const handleEventChoiceSelect = (e) => {
         setEvent(null);
@@ -48,12 +73,19 @@ function App() {
     return (
         <div className="App">
             {!isStop && <span>
-                <Prof increasedProfItemCount={profItemCount} decreasedProfItemCount={decreasedProfItemCount} />
-                <GameArea setProfItemCount={setProfItemCount} increaseProfMans={increaseProfItemCount} onEventPopup={handleEventPopup} />
-            </span>}
-            {isStop && <WinGame ></WinGame>}
-            {event && <Event event={event} onChoiceSelect={handleEventChoiceSelect} />}
-        </div>
+                <ProfArea increasedProfItemCount={profItemCount} decreasedProfItemCount={decreasedProfItemCount} />
+                <GameArea
+                    workerStorage={workerStorage}
+                    workers={workers}
+                    setProfItemCount={setProfItemCount}
+                    increaseProfWorkers={increaseProfItemCount}
+                    onEventPopup={handleEventPopup}
+                />
+            </span >}
+
+            { isStop && <WinGame ></WinGame>}
+            { event && <Event event={event} onChoiceSelect={handleEventChoiceSelect} />}
+        </div >
     );
 }
 
